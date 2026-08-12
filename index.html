@@ -3,24 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Seletor de Sintomas — Dr. Carlos França</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Sintomas — Dr. Carlos França</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --navy: #0A1628;
-    --navy-2: #142035;
+    --navy2: #142035;
     --gold: #C9A84C;
-    --gold-dim: rgba(201,168,76,0.15);
-    --gold-border: rgba(201,168,76,0.35);
+    --gold-dim: rgba(201,168,76,0.13);
+    --gold-border: rgba(201,168,76,0.4);
     --white: #FFFFFF;
     --cream: #F8F5F0;
     --gray: #6B7280;
     --light: #E5E7EB;
-    --selected-bg: rgba(201,168,76,0.12);
-    --selected-border: #C9A84C;
+    --green: #166534;
+    --green-bg: #DCFCE7;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin:0; padding:0; box-sizing:border-box; }
 
   body {
     font-family: 'DM Sans', sans-serif;
@@ -29,436 +29,233 @@
     min-height: 100vh;
   }
 
-  /* HEADER */
+  /* ── HEADER ── */
   header {
     background: var(--navy);
-    padding: 32px 40px 28px;
+    padding: 28px 40px 24px;
     border-bottom: 3px solid var(--gold);
   }
-
-  .header-inner {
-    max-width: 860px;
-    margin: 0 auto;
-  }
-
+  .header-inner { max-width: 860px; margin: 0 auto; }
   .header-tag {
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 10px;
-    font-weight: 500;
+    font-size: 11px; letter-spacing: 4px; color: var(--gold);
+    text-transform: uppercase; margin-bottom: 8px; font-weight: 500;
   }
-
   header h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(22px, 4vw, 32px);
-    color: var(--white);
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 8px;
+    font-size: clamp(20px, 4vw, 28px);
+    color: var(--white); font-weight: 700; line-height: 1.2; margin-bottom: 6px;
   }
+  header p { font-size: 13px; color: rgba(255,255,255,0.45); font-weight: 300; }
 
-  header p {
-    font-size: 14px;
-    color: rgba(255,255,255,0.5);
-    font-weight: 300;
-    line-height: 1.6;
+  /* ── TAB BAR ── */
+  .tabs {
+    background: var(--navy2);
+    display: flex;
+    max-width: 100%;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
   }
-
-  /* MAIN */
-  main {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 40px 40px 120px;
+  .tab {
+    flex: 1; padding: 14px 20px; text-align: center;
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    color: rgba(255,255,255,0.4);
+    border-bottom: 3px solid transparent;
+    transition: all 0.15s;
+    user-select: none;
   }
+  .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab:hover:not(.active) { color: rgba(255,255,255,0.7); }
 
-  /* GRUPO */
-  .group {
-    margin-bottom: 40px;
-  }
+  /* ── MAIN ── */
+  main { max-width: 860px; margin: 0 auto; padding: 36px 40px 140px; }
 
+  /* ── VIEWS ── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── GRUPO ── */
+  .group { margin-bottom: 36px; }
   .group-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
   }
-
   .group-icon {
-    width: 36px;
-    height: 36px;
-    background: var(--navy);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
+    width: 34px; height: 34px; background: var(--navy);
+    border-radius: 8px; display: flex; align-items: center;
+    justify-content: center; font-size: 17px; flex-shrink: 0;
   }
-
   .group-title {
     font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--navy);
+    font-size: 17px; font-weight: 600; color: var(--navy);
   }
-
   .group-count {
-    margin-left: auto;
-    font-size: 12px;
-    color: var(--gray);
-    font-weight: 500;
-    white-space: nowrap;
+    margin-left: auto; font-size: 12px;
+    color: var(--gray); font-weight: 500; white-space: nowrap;
   }
+  .group-count.has { color: var(--gold); }
 
-  /* SINTOMAS GRID */
+  /* ── SINTOMA CARD ── */
   .sintomas {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 10px;
+    gap: 9px;
   }
-
   .sintoma {
-    background: var(--white);
-    border: 1.5px solid var(--light);
-    border-radius: 10px;
-    padding: 14px 16px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
+    background: var(--white); border: 1.5px solid var(--light);
+    border-radius: 10px; padding: 13px 15px;
+    cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: flex-start; gap: 11px;
+    user-select: none; -webkit-tap-highlight-color: transparent;
   }
-
-  .sintoma:hover {
-    border-color: var(--gold-border);
-    background: var(--gold-dim);
-  }
-
-  .sintoma.selected {
-    background: var(--selected-bg);
-    border-color: var(--selected-border);
-  }
-
+  .sintoma:hover { border-color: var(--gold-border); background: var(--gold-dim); }
+  .sintoma.selected { background: var(--gold-dim); border-color: var(--gold); }
   .sintoma-check {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--light);
-    border-radius: 50%;
-    flex-shrink: 0;
-    margin-top: 1px;
-    transition: all 0.15s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 20px; height: 20px; border: 2px solid var(--light);
+    border-radius: 50%; flex-shrink: 0; margin-top: 1px;
+    transition: all 0.15s; display: flex; align-items: center; justify-content: center;
   }
-
-  .sintoma.selected .sintoma-check {
-    background: var(--gold);
-    border-color: var(--gold);
-  }
-
+  .sintoma.selected .sintoma-check { background: var(--gold); border-color: var(--gold); }
   .sintoma.selected .sintoma-check::after {
-    content: '';
-    width: 6px;
-    height: 6px;
-    background: var(--navy);
-    border-radius: 50%;
+    content: ''; width: 6px; height: 6px;
+    background: var(--navy); border-radius: 50%;
   }
+  .sintoma-text { font-size: 13px; color: var(--navy); line-height: 1.5; }
+  .sintoma.selected .sintoma-text { font-weight: 500; }
 
-  .sintoma-text {
-    font-size: 13.5px;
-    color: var(--navy);
-    line-height: 1.5;
-    font-weight: 400;
-  }
+  .divider { height: 1px; background: var(--light); margin: 4px 0 36px; }
 
-  .sintoma.selected .sintoma-text {
-    font-weight: 500;
-  }
-
-  /* DIVIDER */
-  .divider {
-    height: 1px;
-    background: var(--light);
-    margin: 8px 0 40px;
-  }
-
-  /* STICKY FOOTER */
+  /* ── STICKY BAR (seleção) ── */
   .sticky-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: var(--navy);
-    border-top: 2px solid var(--gold);
-    padding: 16px 40px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    z-index: 100;
-    transition: transform 0.25s ease;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--navy); border-top: 2px solid var(--gold);
+    padding: 14px 40px; z-index: 100;
+    transform: translateY(100%); transition: transform 0.25s ease;
   }
-
-  .sticky-bar.hidden {
-    transform: translateY(100%);
-  }
-
+  .sticky-bar.show { transform: translateY(0); }
   .sticky-inner {
-    max-width: 860px;
-    margin: 0 auto;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 16px;
+    max-width: 860px; margin: 0 auto;
+    display: flex; align-items: center; gap: 14px;
   }
-
   .count-badge {
-    background: var(--gold);
-    color: var(--navy);
-    font-weight: 700;
-    font-size: 15px;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: transform 0.2s ease;
+    background: var(--gold); color: var(--navy);
+    font-weight: 700; font-size: 15px;
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: transform 0.2s;
   }
-
-  .count-badge.bump {
-    transform: scale(1.25);
+  .count-badge.bump { transform: scale(1.25); }
+  .sticky-label { font-size: 13px; color: rgba(255,255,255,0.6); flex: 1; line-height: 1.4; }
+  .sticky-label strong { color: var(--white); font-weight: 600; }
+  .btn {
+    padding: 10px 20px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; border: none;
+    transition: all 0.15s; white-space: nowrap;
   }
-
-  .sticky-label {
-    font-size: 13px;
-    color: rgba(255,255,255,0.65);
-    font-weight: 300;
-    flex: 1;
-    line-height: 1.4;
-  }
-
-  .sticky-label strong {
-    color: var(--white);
-    font-weight: 600;
-  }
-
-  .btn-clear {
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.2);
+  .btn-outline {
+    background: transparent; border: 1px solid rgba(255,255,255,0.2);
     color: rgba(255,255,255,0.5);
-    padding: 9px 16px;
-    border-radius: 8px;
-    font-size: 13px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.15s;
-    white-space: nowrap;
   }
+  .btn-outline:hover { border-color: rgba(255,255,255,0.4); color: rgba(255,255,255,0.8); }
+  .btn-gold { background: var(--gold); color: var(--navy); }
+  .btn-gold:hover { background: #dbb85a; }
+  .btn-navy { background: var(--navy); color: var(--white); border: 1px solid rgba(255,255,255,0.2); }
+  .btn-navy:hover { background: var(--navy2); }
 
-  .btn-clear:hover {
-    border-color: rgba(255,255,255,0.4);
-    color: rgba(255,255,255,0.8);
+  /* ── CONFIRM SCREEN (após finalizar) ── */
+  .confirm-screen {
+    display: none; text-align: center; padding: 60px 20px;
   }
-
-  .btn-gerar {
-    background: var(--gold);
-    border: none;
-    color: var(--navy);
-    padding: 10px 22px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-
-  .btn-gerar:hover {
-    background: #dbb85a;
-  }
-
-  /* MODAL */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(10,22,40,0.75);
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    z-index: 200;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-    padding: 20px;
-  }
-
-  .modal-overlay.open {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  .modal {
-    background: var(--white);
-    border-radius: 16px 16px 0 0;
-    width: 100%;
-    max-width: 860px;
-    max-height: 80vh;
-    overflow-y: auto;
-    padding: 32px 32px 40px;
-    transform: translateY(30px);
-    transition: transform 0.25s ease;
-  }
-
-  .modal-overlay.open .modal {
-    transform: translateY(0);
-  }
-
-  .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
-  }
-
-  .modal-title {
+  .confirm-screen.show { display: block; }
+  .confirm-icon { font-size: 52px; margin-bottom: 20px; }
+  .confirm-title {
     font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    color: var(--navy);
-    font-weight: 700;
+    font-size: 26px; color: var(--navy); margin-bottom: 10px;
+  }
+  .confirm-sub { font-size: 14px; color: var(--gray); line-height: 1.7; margin-bottom: 32px; }
+
+  /* ── PAINEL FELIPE ── */
+  .felipe-header {
+    background: var(--navy); border-radius: 12px;
+    padding: 24px 28px; margin-bottom: 28px;
+    border-left: 4px solid var(--gold);
+  }
+  .felipe-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; color: var(--white); margin-bottom: 6px;
+  }
+  .felipe-header p { font-size: 13px; color: rgba(255,255,255,0.5); }
+
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 16px; border-radius: 100px;
+    font-size: 13px; font-weight: 600; margin-bottom: 28px;
+  }
+  .status-pill.waiting { background: #FEF3C7; color: #92400E; }
+  .status-pill.done { background: var(--green-bg); color: var(--green); }
+  .status-pill .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: currentColor; animation: pulse 1.5s infinite;
+  }
+  .status-pill.done .dot { animation: none; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
   }
 
-  .modal-close {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--cream);
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--gray);
-    transition: background 0.15s;
+  .result-group { margin-bottom: 28px; }
+  .result-group-title {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 15px; font-weight: 600; color: var(--navy);
+    margin-bottom: 12px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--light);
+  }
+  .result-items { display: flex; flex-direction: column; gap: 8px; }
+  .result-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 16px; background: var(--white);
+    border-radius: 8px; border: 1px solid var(--light);
+    font-size: 13.5px; color: var(--navy); line-height: 1.5;
+  }
+  .result-item::before {
+    content: '→'; color: var(--gold);
+    font-weight: 700; flex-shrink: 0; margin-top: 1px;
   }
 
-  .modal-close:hover { background: var(--light); }
-
-  .modal-desc {
-    font-size: 13px;
-    color: var(--gray);
-    margin-bottom: 28px;
-    line-height: 1.6;
-    background: var(--cream);
-    padding: 14px 16px;
-    border-radius: 8px;
-    border-left: 3px solid var(--gold);
+  .copy-bar {
+    background: var(--white); border: 1px solid var(--light);
+    border-radius: 12px; padding: 20px 24px;
+    display: flex; align-items: center; gap: 16px;
+    margin-top: 32px; flex-wrap: wrap;
   }
+  .copy-bar p { font-size: 13px; color: var(--gray); flex: 1; line-height: 1.5; }
+  .copy-bar p strong { color: var(--navy); }
 
-  .modal-sintomas {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 28px;
+  .empty-state {
+    text-align: center; padding: 80px 20px; color: var(--gray);
   }
+  .empty-state p { font-size: 14px; line-height: 1.7; }
 
-  .modal-sintoma-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: var(--cream);
-    border-radius: 8px;
-    font-size: 13.5px;
-    color: var(--navy);
-  }
-
-  .modal-sintoma-item::before {
-    content: '→';
-    color: var(--gold);
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-
-  .modal-actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .modal-btn {
-    flex: 1;
-    min-width: 140px;
-    padding: 12px 20px;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    border: none;
-    transition: all 0.15s;
-  }
-
-  .modal-btn-primary {
-    background: var(--navy);
-    color: var(--white);
-  }
-
-  .modal-btn-primary:hover { background: var(--navy-2); }
-
-  .modal-btn-secondary {
-    background: var(--gold);
-    color: var(--navy);
-  }
-
-  .modal-btn-secondary:hover { background: #dbb85a; }
-
-  /* COPY TOAST */
+  /* ── TOAST ── */
   .toast {
-    position: fixed;
-    top: 24px;
-    left: 50%;
+    position: fixed; top: 24px; left: 50%;
     transform: translateX(-50%) translateY(-80px);
-    background: var(--navy);
-    color: var(--white);
-    padding: 12px 24px;
-    border-radius: 100px;
-    font-size: 13px;
-    font-weight: 500;
+    background: var(--navy); color: var(--white);
+    padding: 12px 24px; border-radius: 100px;
+    font-size: 13px; font-weight: 500;
     border: 1px solid var(--gold-border);
-    z-index: 300;
-    transition: transform 0.3s ease;
-    white-space: nowrap;
+    z-index: 300; transition: transform 0.3s; white-space: nowrap;
   }
+  .toast.show { transform: translateX(-50%) translateY(0); }
 
-  .toast.show {
-    transform: translateX(-50%) translateY(0);
-  }
-
-  /* EMPTY STATE */
-  .empty {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--gray);
-    font-size: 14px;
-    display: none;
+  /* ── LOADING ── */
+  .loading {
+    text-align: center; padding: 60px 20px; color: var(--gray); font-size: 14px;
   }
 
   @media (max-width: 600px) {
-    header { padding: 24px 20px 20px; }
-    main { padding: 28px 20px 120px; }
-    .sticky-bar { padding: 14px 20px; }
+    header { padding: 22px 20px 18px; }
+    main { padding: 24px 20px 140px; }
+    .sticky-bar { padding: 12px 20px; }
     .sintomas { grid-template-columns: 1fr; }
-    .modal { padding: 24px 20px 32px; border-radius: 16px 16px 0 0; }
-    .modal-actions { flex-direction: column; }
-    .modal-btn { min-width: unset; }
+    .copy-bar { flex-direction: column; align-items: stretch; }
   }
 </style>
 </head>
@@ -467,208 +264,162 @@
 <header>
   <div class="header-inner">
     <div class="header-tag">Daily Data · Dr. Carlos França</div>
-    <h1>Selecione os sintomas<br>para os roteiros de anúncios</h1>
-    <p>Marque os sintomas que deseja abordar. Você pode selecionar quantos quiser — o resumo aparece abaixo para copiar ou encaminhar.</p>
+    <h1>Seletor de Sintomas<br>para Roteiros de Anúncios</h1>
+    <p>Selecione os sintomas e finalize para enviar à equipe</p>
   </div>
 </header>
 
-<main id="main">
+<div class="tabs">
+  <div class="tab active" id="tab-medico" onclick="switchTab('medico')">🩺 Dr. Carlos — Seleção</div>
+  <div class="tab" id="tab-felipe" onclick="switchTab('felipe')">📋 Felipe — Resultado</div>
+</div>
 
-  <!-- GRUPO 1 -->
-  <div class="group">
-    <div class="group-header">
-      <div class="group-icon">☀️</div>
-      <div class="group-title">Durante o dia — trabalho e rotina</div>
-      <div class="group-count" id="count-0">0 selecionados</div>
-    </div>
-    <div class="sintomas" data-group="0">
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Dor ao abrir um pote ou girar uma maçaneta</div>
-      </div>
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Formigamento nos dedos depois de muito tempo no celular ou computador</div>
-      </div>
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Dificuldade para apertar objetos com firmeza — caneta, volante, colher</div>
-      </div>
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Dedo que trava ao abrir a mão de manhã e vai soltando ao longo do dia</div>
-      </div>
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Dor na base do polegar ao segurar objetos (comum em mães com bebê pequeno)</div>
-      </div>
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Sensação de choque ou fisgada ao dobrar o pulso</div>
-      </div>
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Inchaço no dorso da mão sem motivo aparente</div>
-      </div>
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Dificuldade para fazer movimentos finos — abotoar roupa, pegar moedas, costurar</div>
-      </div>
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Caroço que aparece no punho ou na palma sem dor (cisto sinovial)</div>
-      </div>
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Dor ao carregar sacola de mercado ou balde</div>
-      </div>
-    </div>
-  </div>
+<main>
 
-  <div class="divider"></div>
+  <!-- ════ VIEW: DR. CARLOS ════ -->
+  <div class="view active" id="view-medico">
 
-  <!-- GRUPO 2 -->
-  <div class="group">
-    <div class="group-header">
-      <div class="group-icon">🌙</div>
-      <div class="group-title">À noite e ao acordar</div>
-      <div class="group-count" id="count-1">0 selecionados</div>
-    </div>
-    <div class="sintomas" data-group="1">
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Acordar de madrugada com as mãos dormentes — precisa sacudir para voltar a sentir</div>
-      </div>
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Formigamento que começa no dedo mindinho e sobe pelo braço (nervo ulnar)</div>
-      </div>
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Dor no punho que piora quando deita e some quando levanta</div>
-      </div>
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Rigidez nas mãos ao acordar — demora minutos para esquentar e soltar</div>
-      </div>
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Sensação de que a mão está inchada pela manhã mesmo sem inchaço visível</div>
-      </div>
-    </div>
-  </div>
+    <!-- Seleção normal -->
+    <div id="selecao-screen">
 
-  <div class="divider"></div>
+      <div class="group">
+        <div class="group-header">
+          <div class="group-icon">☀️</div>
+          <div class="group-title">Durante o dia — trabalho e rotina</div>
+          <div class="group-count" id="gc-0"></div>
+        </div>
+        <div class="sintomas" data-group="0">
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Dor ao abrir um pote ou girar uma maçaneta</div></div>
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Formigamento nos dedos depois de muito tempo no celular ou computador</div></div>
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Dificuldade para apertar objetos com firmeza — caneta, volante, colher</div></div>
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Dedo que trava ao abrir a mão de manhã e vai soltando ao longo do dia</div></div>
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Dor na base do polegar ao segurar objetos (comum em mães com bebê pequeno)</div></div>
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Sensação de choque ou fisgada ao dobrar o pulso</div></div>
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Inchaço no dorso da mão sem motivo aparente</div></div>
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Dificuldade para movimentos finos — abotoar roupa, pegar moedas, costurar</div></div>
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Caroço no punho ou na palma sem dor (cisto sinovial)</div></div>
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Dor ao carregar sacola de mercado ou balde</div></div>
+        </div>
+      </div>
 
-  <!-- GRUPO 3 -->
-  <div class="group">
-    <div class="group-header">
-      <div class="group-icon">⚠️</div>
-      <div class="group-title">Sinais que o paciente normaliza</div>
-      <div class="group-count" id="count-2">0 selecionados</div>
+      <div class="divider"></div>
+
+      <div class="group">
+        <div class="group-header">
+          <div class="group-icon">🌙</div>
+          <div class="group-title">À noite e ao acordar</div>
+          <div class="group-count" id="gc-1"></div>
+        </div>
+        <div class="sintomas" data-group="1">
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Acordar de madrugada com as mãos dormentes — precisa sacudir para voltar a sentir</div></div>
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Formigamento que começa no dedo mindinho e sobe pelo braço (nervo ulnar)</div></div>
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Dor no punho que piora quando deita e some quando levanta</div></div>
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Rigidez nas mãos ao acordar — demora minutos para esquentar e soltar</div></div>
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Sensação de que a mão está inchada pela manhã mesmo sem inchaço visível</div></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="group">
+        <div class="group-header">
+          <div class="group-icon">⚠️</div>
+          <div class="group-title">Sinais que o paciente normaliza</div>
+          <div class="group-count" id="gc-2"></div>
+        </div>
+        <div class="sintomas" data-group="2">
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Dificuldade para segurar o celular por muito tempo sem cansar</div></div>
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Deixar cair objetos sem querer — copo, chave, talheres</div></div>
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Evitar apertar a mão de alguém por vergonha da fraqueza</div></div>
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Usar a outra mão para compensar sem perceber</div></div>
+          <div class="sintoma" onclick="toggle(this)"><div class="sintoma-check"></div><div class="sintoma-text">Sentir que perdeu a destreza — antes fazia algo com facilidade, hoje não consegue mais</div></div>
+        </div>
+      </div>
+
+    </div><!-- /selecao-screen -->
+
+    <!-- Tela de confirmação pós-finalizar -->
+    <div class="confirm-screen" id="confirm-screen">
+      <div class="confirm-icon">✅</div>
+      <div class="confirm-title">Seleção enviada!</div>
+      <p class="confirm-sub">
+        Seus sintomas foram salvos e já estão disponíveis para a equipe da Daily Data.<br>
+        Felipe pode visualizar tudo na aba <strong>Felipe — Resultado</strong>.
+      </p>
+      <button class="btn btn-navy" onclick="refazer()" style="margin: 0 auto;">
+        Refazer seleção
+      </button>
     </div>
-    <div class="sintomas" data-group="2">
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Dificuldade para segurar o celular por muito tempo sem cansar</div>
-      </div>
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Deixar cair objetos sem querer — copo, chave, talheres</div>
-      </div>
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Evitar apertar a mão de alguém por vergonha da fraqueza</div>
-      </div>
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Usar a outra mão para compensar sem perceber</div>
-      </div>
-      <div class="sintoma" onclick="toggle(this)">
-        <div class="sintoma-check"></div>
-        <div class="sintoma-text">Sentir que perdeu a destreza — antes fazia algo com facilidade, hoje não consegue mais</div>
-      </div>
-    </div>
+
+  </div><!-- /view-medico -->
+
+  <!-- ════ VIEW: FELIPE ════ -->
+  <div class="view" id="view-felipe">
+    <div class="loading" id="felipe-loading">Carregando...</div>
+    <div id="felipe-content" style="display:none;"></div>
   </div>
 
 </main>
 
 <!-- STICKY BAR -->
-<div class="sticky-bar hidden" id="stickyBar">
+<div class="sticky-bar" id="stickyBar">
   <div class="sticky-inner">
     <div class="count-badge" id="countBadge">0</div>
     <div class="sticky-label">
       <strong id="labelText">sintomas selecionados</strong><br>
-      Pronto para gerar os roteiros
+      Finalize para enviar à Daily Data
     </div>
-    <button class="btn-clear" onclick="clearAll()">Limpar</button>
-    <button class="btn-gerar" onclick="openModal()">Ver seleção →</button>
-  </div>
-</div>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Sintomas selecionados</div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-    <div class="modal-desc">
-      Estes são os sintomas escolhidos para embasar os roteiros de anúncios. Copie o resumo para encaminhar à Daily Data ou use como referência na gravação.
-    </div>
-    <div class="modal-sintomas" id="modalSintomas"></div>
-    <div class="modal-actions">
-      <button class="modal-btn modal-btn-secondary" onclick="copiarResumo()">📋 Copiar resumo</button>
-      <button class="modal-btn modal-btn-primary" onclick="closeModal()">Continuar selecionando</button>
-    </div>
+    <button class="btn btn-outline" onclick="clearAll()">Limpar</button>
+    <button class="btn btn-gold" onclick="finalizar()">Finalizar ✓</button>
   </div>
 </div>
 
 <!-- TOAST -->
-<div class="toast" id="toast">✓ Resumo copiado!</div>
+<div class="toast" id="toast"></div>
 
 <script>
-  const selected = new Set();
+  // ── DADOS ──
+  const GRUPOS = [
+    { icon: '☀️', label: 'Durante o dia — trabalho e rotina' },
+    { icon: '🌙', label: 'À noite e ao acordar' },
+    { icon: '⚠️', label: 'Sinais que o paciente normaliza' },
+  ];
 
+  const STORAGE_KEY = 'drcarlos-sintomas-v1';
+  const selected = new Set();
+  let currentTab = 'medico';
+  let jaFinalizado = false;
+
+  // ── TOGGLE ──
   function toggle(el) {
+    if (jaFinalizado) return;
     el.classList.toggle('selected');
     const text = el.querySelector('.sintoma-text').textContent;
-
-    if (el.classList.contains('selected')) {
-      selected.add(text);
-    } else {
-      selected.delete(text);
-    }
-
+    el.classList.contains('selected') ? selected.add(text) : selected.delete(text);
     updateGroupCounts();
     updateBar();
   }
 
   function updateGroupCounts() {
     document.querySelectorAll('.sintomas').forEach((grid, i) => {
-      const count = grid.querySelectorAll('.sintoma.selected').length;
-      const label = document.getElementById('count-' + i);
-      label.textContent = count === 0 ? '' : count === 1 ? '1 selecionado' : `${count} selecionados`;
-      label.style.color = count > 0 ? 'var(--gold)' : 'var(--gray)';
+      const n = grid.querySelectorAll('.sintoma.selected').length;
+      const el = document.getElementById('gc-' + i);
+      el.textContent = n > 0 ? (n === 1 ? '1 selecionado' : n + ' selecionados') : '';
+      el.className = 'group-count' + (n > 0 ? ' has' : '');
     });
   }
 
   function updateBar() {
     const bar = document.getElementById('stickyBar');
     const badge = document.getElementById('countBadge');
-    const label = document.getElementById('labelText');
     const n = selected.size;
-
-    if (n === 0) {
-      bar.classList.add('hidden');
-    } else {
-      bar.classList.remove('hidden');
-      badge.textContent = n;
-      label.textContent = n === 1 ? '1 sintoma selecionado' : `${n} sintomas selecionados`;
-
-      badge.classList.add('bump');
-      setTimeout(() => badge.classList.remove('bump'), 200);
-    }
+    if (n === 0 || jaFinalizado) { bar.classList.remove('show'); return; }
+    bar.classList.add('show');
+    badge.textContent = n;
+    document.getElementById('labelText').textContent =
+      n === 1 ? '1 sintoma selecionado' : n + ' sintomas selecionados';
+    badge.classList.add('bump');
+    setTimeout(() => badge.classList.remove('bump'), 200);
   }
 
   function clearAll() {
@@ -678,39 +429,155 @@
     updateBar();
   }
 
-  function openModal() {
-    const container = document.getElementById('modalSintomas');
-    container.innerHTML = '';
-    selected.forEach(text => {
-      const div = document.createElement('div');
-      div.className = 'modal-sintoma-item';
-      div.textContent = text;
-      container.appendChild(div);
+  // ── FINALIZAR ──
+  async function finalizar() {
+    if (selected.size === 0) { showToast('Selecione ao menos um sintoma'); return; }
+
+    // Montar objeto com grupos
+    const grupos = [];
+    document.querySelectorAll('.sintomas').forEach((grid, i) => {
+      const items = [...grid.querySelectorAll('.sintoma.selected')]
+        .map(el => el.querySelector('.sintoma-text').textContent);
+      if (items.length > 0) {
+        grupos.push({ grupo: GRUPOS[i].label, icon: GRUPOS[i].icon, items });
+      }
     });
-    document.getElementById('modalOverlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
+
+    const payload = {
+      grupos,
+      total: selected.size,
+      finalizadoEm: new Date().toLocaleString('pt-BR', { timeZone: 'America/Maceio' }),
+    };
+
+    try {
+      await window.storage.set(STORAGE_KEY, JSON.stringify(payload), true);
+      jaFinalizado = true;
+      document.getElementById('selecao-screen').style.display = 'none';
+      document.getElementById('confirm-screen').classList.add('show');
+      document.getElementById('stickyBar').classList.remove('show');
+      showToast('✓ Seleção salva com sucesso!');
+    } catch (e) {
+      showToast('Erro ao salvar. Tente novamente.');
+    }
   }
 
-  function closeModal() {
-    document.getElementById('modalOverlay').classList.remove('open');
-    document.body.style.overflow = '';
+  function refazer() {
+    jaFinalizado = false;
+    clearAll();
+    document.getElementById('selecao-screen').style.display = 'block';
+    document.getElementById('confirm-screen').classList.remove('show');
   }
 
-  function closeModalOutside(e) {
-    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  // ── TAB ──
+  function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + tab).classList.add('active');
+
+    if (tab === 'felipe') loadFelipe();
+    if (tab === 'medico') updateBar();
+    else document.getElementById('stickyBar').classList.remove('show');
   }
 
-  function copiarResumo() {
-    const items = Array.from(selected);
-    const texto = `Sintomas selecionados para roteiros — Dr. Carlos França\n\n` +
-      items.map((s, i) => `${i + 1}. ${s}`).join('\n') +
-      `\n\nTotal: ${items.length} sintoma${items.length > 1 ? 's' : ''}`;
+  // ── PAINEL FELIPE ──
+  async function loadFelipe() {
+    const loading = document.getElementById('felipe-loading');
+    const content = document.getElementById('felipe-content');
+    loading.style.display = 'block';
+    content.style.display = 'none';
 
-    navigator.clipboard.writeText(texto).then(() => {
-      const toast = document.getElementById('toast');
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2500);
-    });
+    try {
+      const result = await window.storage.get(STORAGE_KEY, true);
+      loading.style.display = 'none';
+      content.style.display = 'block';
+
+      if (!result || !result.value) {
+        content.innerHTML = `
+          <div class="empty-state">
+            <p style="font-size:36px;margin-bottom:16px;">⏳</p>
+            <p><strong>Aguardando seleção do Dr. Carlos.</strong><br>
+            Assim que ele finalizar, os sintomas aparecerão aqui automaticamente.<br>
+            Atualize a aba para verificar.</p>
+          </div>`;
+        return;
+      }
+
+      const data = JSON.parse(result.value);
+      renderFelipe(data, content);
+    } catch (e) {
+      loading.style.display = 'none';
+      content.style.display = 'block';
+      content.innerHTML = `
+        <div class="empty-state">
+          <p style="font-size:36px;margin-bottom:16px;">⏳</p>
+          <p><strong>Aguardando seleção do Dr. Carlos.</strong><br>
+          Assim que ele finalizar, os sintomas aparecerão aqui.<br>
+          Atualize a aba para verificar.</p>
+        </div>`;
+    }
+  }
+
+  function renderFelipe(data, container) {
+    const totalSintomas = data.total;
+    const grupos = data.grupos;
+
+    let gruposHTML = grupos.map(g => `
+      <div class="result-group">
+        <div class="result-group-title">
+          <span>${g.icon}</span> ${g.grupo}
+          <span style="margin-left:auto;font-size:12px;color:var(--gray);font-weight:400;">
+            ${g.items.length} sintoma${g.items.length > 1 ? 's' : ''}
+          </span>
+        </div>
+        <div class="result-items">
+          ${g.items.map(item => `<div class="result-item">${item}</div>`).join('')}
+        </div>
+      </div>
+    `).join('');
+
+    // Texto para copiar
+    const textoPlano = `Sintomas selecionados — Dr. Carlos França\nFinalizado em: ${data.finalizadoEm}\n\n` +
+      grupos.map(g => `${g.grupo}:\n` + g.items.map((item, i) => `  ${i+1}. ${item}`).join('\n')).join('\n\n') +
+      `\n\nTotal: ${totalSintomas} sintoma${totalSintomas > 1 ? 's' : ''}`;
+
+    container.innerHTML = `
+      <div class="felipe-header">
+        <h2>Seleção do Dr. Carlos França</h2>
+        <p>Finalizado em ${data.finalizadoEm}</p>
+      </div>
+
+      <div class="status-pill done">
+        <div class="dot"></div>
+        ${totalSintomas} sintoma${totalSintomas > 1 ? 's' : ''} selecionado${totalSintomas > 1 ? 's' : ''}
+      </div>
+
+      ${gruposHTML}
+
+      <div class="copy-bar">
+        <p><strong>Resumo pronto para usar.</strong><br>
+        Copie e cole no documento de roteiros ou encaminhe para a equipe de produção.</p>
+        <button class="btn btn-gold" onclick="copiarTexto(${JSON.stringify(textoPlano).replace(/</g,'&lt;')})">
+          📋 Copiar tudo
+        </button>
+        <button class="btn btn-navy" onclick="loadFelipe()">
+          ↻ Atualizar
+        </button>
+      </div>
+    `;
+  }
+
+  function copiarTexto(texto) {
+    navigator.clipboard.writeText(texto).then(() => showToast('✓ Copiado!'));
+  }
+
+  // ── TOAST ──
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
   }
 </script>
 </body>
