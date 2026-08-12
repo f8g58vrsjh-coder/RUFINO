@@ -3,749 +3,584 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Seleção de Temas — Dr. Eloísio Lopes</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Roteiros — Dr. Carlos França</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --navy: #0D1F3C;
-    --navy2: #162840;
-    --gold: #B8903A;
-    --gold-light: rgba(184,144,58,0.13);
-    --gold-border: rgba(184,144,58,0.35);
+    --navy: #0A1628;
+    --navy2: #142035;
+    --gold: #C9A84C;
+    --gold-dim: rgba(201,168,76,0.12);
+    --gold-border: rgba(201,168,76,0.4);
     --white: #FFFFFF;
-    --cream: #F7F5F1;
+    --cream: #F8F5F0;
     --gray: #6B7280;
     --light: #E5E7EB;
-    --text: #1C2B3A;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--navy); min-height:100vh; }
+
+  header { background:var(--navy); padding:28px 40px 24px; border-bottom:3px solid var(--gold); }
+  .header-inner { max-width:900px; margin:0 auto; }
+  .header-tag { font-size:11px; letter-spacing:4px; color:var(--gold); text-transform:uppercase; margin-bottom:8px; font-weight:500; }
+  header h1 { font-family:'Playfair Display',serif; font-size:clamp(20px,4vw,28px); color:var(--white); font-weight:700; line-height:1.2; margin-bottom:6px; }
+  header p { font-size:13px; color:rgba(255,255,255,0.45); font-weight:300; }
+
+  main { max-width:900px; margin:0 auto; padding:36px 40px 140px; }
+
+  /* GRUPO */
+  .group { margin-bottom:40px; }
+  .group-header { display:flex; align-items:center; gap:10px; margin-bottom:16px; padding-bottom:12px; border-bottom:2px solid var(--light); }
+  .group-icon { width:36px; height:36px; background:var(--navy); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .group-title { font-family:'Playfair Display',serif; font-size:18px; font-weight:600; color:var(--navy); flex:1; }
+  .group-count { font-size:12px; color:var(--gray); font-weight:500; white-space:nowrap; }
+  .group-count.has { color:var(--gold); }
+
+  /* ROTEIRO CARD */
+  .roteiros { display:flex; flex-direction:column; gap:10px; }
+  .roteiro {
+    background:var(--white); border:1.5px solid var(--light);
+    border-radius:12px; overflow:hidden; cursor:pointer;
+    transition:all 0.15s; user-select:none; -webkit-tap-highlight-color:transparent;
+  }
+  .roteiro:hover { border-color:var(--gold-border); }
+  .roteiro.selected { border-color:var(--gold); background:var(--gold-dim); }
+
+  .roteiro-header {
+    display:flex; align-items:center; gap:12px;
+    padding:14px 16px; border-bottom:1px solid var(--light);
+  }
+  .roteiro.selected .roteiro-header { border-color:rgba(201,168,76,0.25); }
+
+  .roteiro-check {
+    width:22px; height:22px; border:2px solid var(--light); border-radius:50%;
+    flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    transition:all 0.15s;
+  }
+  .roteiro.selected .roteiro-check { background:var(--gold); border-color:var(--gold); }
+  .roteiro.selected .roteiro-check::after { content:''; width:7px; height:7px; background:var(--navy); border-radius:50%; }
+
+  .roteiro-titulo {
+    font-size:14px; font-weight:600; color:var(--navy); flex:1; line-height:1.4;
+  }
+  .roteiro.selected .roteiro-titulo { color:var(--navy); }
+
+  .roteiro-badge {
+    font-size:10px; padding:3px 10px; border-radius:100px;
+    font-weight:600; white-space:nowrap; flex-shrink:0;
+    background:#EEF6FF; color:#1a5fa8;
+  }
+  .roteiro-badge.emocional { background:#FFF8ED; color:#8a5c0a; }
+  .roteiro-badge.alcance { background:#F0FFF4; color:#1a6b35; }
+  .roteiro-badge.urgente { background:#FFF0F0; color:#b91c1c; }
+  .roteiro-badge.sugestao { background:#F5F0FF; color:#5a3a8a; }
+
+  /* CAMPOS DO ROTEIRO */
+  .roteiro-body { padding:14px 16px; display:none; }
+  .roteiro.selected .roteiro-body { display:block; }
+
+  .campo { margin-bottom:10px; display:flex; gap:10px; align-items:flex-start; }
+  .campo:last-child { margin-bottom:0; }
+  .campo-label {
+    font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+    color:var(--gold); min-width:72px; padding-top:2px; flex-shrink:0;
+  }
+  .campo-texto {
+    font-size:13px; color:var(--navy); line-height:1.6; font-style:italic;
+  }
+  .campo-cta {
+    font-size:13px; color:var(--navy); font-weight:600; line-height:1.6;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  .divider { height:1px; background:var(--light); margin:4px 0 40px; }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--cream);
-    color: var(--text);
-    min-height: 100vh;
+  /* STICKY BAR */
+  .sticky-bar {
+    position:fixed; bottom:0; left:0; right:0;
+    background:var(--navy); border-top:2px solid var(--gold);
+    padding:14px 40px; z-index:100;
+    transform:translateY(100%); transition:transform 0.25s ease;
   }
+  .sticky-bar.show { transform:translateY(0); }
+  .sticky-inner { max-width:900px; margin:0 auto; display:flex; align-items:center; gap:14px; }
+  .count-badge {
+    background:var(--gold); color:var(--navy); font-weight:700; font-size:15px;
+    width:34px; height:34px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; transition:transform 0.2s;
+  }
+  .count-badge.bump { transform:scale(1.25); }
+  .sticky-label { font-size:13px; color:rgba(255,255,255,0.6); flex:1; line-height:1.4; }
+  .sticky-label strong { color:var(--white); font-weight:600; }
+  .btn { padding:10px 20px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; border:none; transition:all 0.15s; white-space:nowrap; }
+  .btn-outline { background:transparent; border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.5); }
+  .btn-outline:hover { border-color:rgba(255,255,255,0.4); color:rgba(255,255,255,0.8); }
+  .btn-gold { background:var(--gold); color:var(--navy); }
+  .btn-gold:hover { background:#dbb85a; }
+  .btn-navy { background:var(--navy); color:var(--white); border:1px solid rgba(255,255,255,0.15); }
 
-  /* TABS DE PERFIL */
-  .profile-tabs {
-    display: flex;
-    background: var(--navy);
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-  }
-  .profile-tab {
-    flex: 1;
-    padding: 14px 20px;
-    text-align: center;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.35);
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s;
-  }
-  .profile-tab.active {
-    color: var(--gold);
-    border-bottom-color: var(--gold);
-    background: rgba(184,144,58,0.06);
-  }
-  .profile-tab:hover:not(.active) { color: rgba(255,255,255,0.6); }
+  /* CONFIRM */
+  .confirm-screen { display:none; text-align:center; padding:60px 20px; }
+  .confirm-screen.show { display:block; }
+  .confirm-icon { font-size:52px; margin-bottom:20px; }
+  .confirm-title { font-family:'Playfair Display',serif; font-size:26px; color:var(--navy); margin-bottom:10px; }
+  .confirm-sub { font-size:14px; color:var(--gray); line-height:1.7; margin-bottom:32px; }
 
-  /* HEADER */
-  header {
-    background: var(--navy);
-    padding: 28px 40px 24px;
-  }
-  .header-inner { max-width: 820px; margin: 0 auto; }
-  .header-tag {
-    font-size: 10px;
-    letter-spacing: 3.5px;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    font-weight: 600;
-  }
-  header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(20px, 3.5vw, 28px);
-    color: var(--white);
-    font-weight: 700;
-    line-height: 1.25;
-    margin-bottom: 6px;
-  }
-  header p {
-    font-size: 13px;
-    color: rgba(255,255,255,0.45);
-    line-height: 1.6;
-  }
+  /* TOAST */
+  .toast { position:fixed; top:24px; left:50%; transform:translateX(-50%) translateY(-80px); background:var(--navy); color:var(--white); padding:12px 24px; border-radius:100px; font-size:13px; font-weight:500; border:1px solid var(--gold-border); z-index:300; transition:transform 0.3s; white-space:nowrap; }
+  .toast.show { transform:translateX(-50%) translateY(0); }
 
-  /* SCREENS */
-  .screen { display: none; }
-  .screen.active { display: block; }
-
-  /* ── DR SCREEN ─────────────────────────────── */
-  .dr-main {
-    max-width: 820px;
-    margin: 0 auto;
-    padding: 32px 40px 60px;
-  }
-
-  .section-eyebrow {
-    font-size: 9.5px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--gold);
-    font-weight: 600;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .section-eyebrow::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--gold-border);
-  }
-
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 17px;
-    color: var(--navy);
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-  .section-desc {
-    font-size: 12.5px;
-    color: var(--gray);
-    margin-bottom: 16px;
-    line-height: 1.6;
-  }
-
-  .group {
-    margin-bottom: 32px;
-  }
-
-  .items-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 8px;
-  }
-
-  .item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 12px 14px;
-    border: 1.5px solid var(--light);
-    border-radius: 10px;
-    cursor: pointer;
-    background: var(--white);
-    transition: all 0.18s;
-    user-select: none;
-  }
-  .item:hover { border-color: var(--gold-border); background: var(--gold-light); }
-  .item.selected {
-    border-color: var(--gold);
-    background: var(--gold-light);
-  }
-
-  .item-check {
-    width: 18px;
-    height: 18px;
-    border-radius: 5px;
-    border: 1.5px solid var(--light);
-    flex-shrink: 0;
-    margin-top: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.18s;
-    background: var(--white);
-  }
-  .item.selected .item-check {
-    background: var(--gold);
-    border-color: var(--gold);
-  }
-  .item.selected .item-check::after {
-    content: '';
-    display: block;
-    width: 5px;
-    height: 9px;
-    border: 2px solid white;
-    border-top: none;
-    border-left: none;
-    transform: rotate(45deg) translate(-1px, -1px);
-  }
-
-  .item-label {
-    font-size: 13px;
-    color: var(--text);
-    line-height: 1.45;
-    font-weight: 400;
-  }
-  .item.selected .item-label { color: var(--navy); font-weight: 500; }
-
-  /* DIVIDER */
-  .divider {
-    height: 1px;
-    background: var(--light);
-    margin: 28px 0;
-  }
-
-  /* COUNTER BAR */
-  .counter-bar {
-    position: sticky;
-    bottom: 0;
-    background: var(--white);
-    border-top: 1px solid var(--light);
-    padding: 14px 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    box-shadow: 0 -4px 24px rgba(0,0,0,0.07);
-    z-index: 50;
-  }
-  .counter-text {
-    font-size: 13px;
-    color: var(--gray);
-  }
-  .counter-text strong { color: var(--navy); }
-
-  .btn-finalizar {
-    background: var(--navy);
-    color: var(--white);
-    border: none;
-    padding: 11px 28px;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    letter-spacing: 0.5px;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .btn-finalizar:hover { background: var(--gold); color: var(--navy); }
-  .btn-finalizar:disabled { opacity: 0.4; cursor: not-allowed; }
-  .btn-finalizar:disabled:hover { background: var(--navy); color: var(--white); }
-
-  /* SUCCESS */
-  .success-box {
-    display: none;
-    max-width: 500px;
-    margin: 60px auto;
-    text-align: center;
-    padding: 48px 40px;
-    background: var(--white);
-    border: 1px solid var(--light);
-    border-radius: 16px;
-  }
-  .success-box.visible { display: block; }
-  .success-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--gold-light);
-    border: 2px solid var(--gold-border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 20px;
-    font-size: 24px;
-  }
-  .success-box h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    color: var(--navy);
-    margin-bottom: 10px;
-  }
-  .success-box p { font-size: 13px; color: var(--gray); line-height: 1.7; }
-
-  /* ── FELIPE SCREEN ─────────────────────────── */
-  .felipe-main {
-    max-width: 820px;
-    margin: 0 auto;
-    padding: 32px 40px 60px;
-  }
-
-  .status-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    border-radius: 10px;
-    margin-bottom: 28px;
-    font-size: 13px;
-    font-weight: 500;
-  }
-  .status-bar.waiting {
-    background: #FFF7ED;
-    border: 1px solid #FED7AA;
-    color: #92400E;
-  }
-  .status-bar.ready {
-    background: #F0FDF4;
-    border: 1px solid #BBF7D0;
-    color: #14532D;
-  }
-  .status-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .status-dot.pulse {
-    background: #F97316;
-    animation: blink 1.5s infinite;
-  }
-  .status-dot.green { background: #22C55E; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-  .result-section { margin-bottom: 28px; }
-  .result-section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 15px;
-    color: var(--navy);
-    font-weight: 700;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--light);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .result-count {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
-    background: var(--navy);
-    color: var(--white);
-    padding: 2px 8px;
-    border-radius: 100px;
-    font-weight: 600;
-  }
-
-  .result-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 10px 14px;
-    background: var(--white);
-    border: 1px solid var(--light);
-    border-radius: 8px;
-    margin-bottom: 6px;
-    font-size: 13px;
-    color: var(--text);
-    line-height: 1.5;
-  }
-  .result-item::before {
-    content: '✓';
-    color: var(--gold);
-    font-weight: 700;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-
-  .empty-result {
-    padding: 20px;
-    text-align: center;
-    color: var(--gray);
-    font-size: 13px;
-    background: var(--white);
-    border: 1px dashed var(--light);
-    border-radius: 8px;
-  }
-
-  .timestamp {
-    font-size: 11px;
-    color: var(--gray);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .btn-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 24px;
-  }
-  .btn-secondary {
-    background: var(--white);
-    color: var(--navy);
-    border: 1.5px solid var(--light);
-    padding: 10px 22px;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-secondary:hover { border-color: var(--gold-border); background: var(--gold-light); }
-  .btn-copy {
-    background: var(--navy);
-    color: var(--white);
-    border: none;
-    padding: 10px 22px;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-copy:hover { background: var(--gold); color: var(--navy); }
-  .btn-copy.copied { background: #16A34A; }
-
-  .obs-box {
-    background: var(--white);
-    border: 1px solid var(--light);
-    border-left: 3px solid var(--gold);
-    border-radius: 8px;
-    padding: 14px 16px;
-    margin-top: 12px;
-    font-size: 13px;
-    color: var(--text);
-    line-height: 1.65;
-  }
-  .obs-label {
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--gold);
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-
-  @media (max-width: 600px) {
-    .dr-main, .felipe-main { padding: 24px 20px 80px; }
-    header { padding: 22px 20px 18px; }
-    .counter-bar { padding: 12px 20px; }
-    .items-grid { grid-template-columns: 1fr; }
+  @media(max-width:600px) {
+    header { padding:22px 20px 18px; }
+    main { padding:24px 20px 140px; }
+    .sticky-bar { padding:12px 20px; }
   }
 </style>
 </head>
 <body>
 
-<!-- PROFILE TABS -->
-<div class="profile-tabs">
-  <div class="profile-tab active" id="tab-dr">🩺 Dr. Eloísio Lopes — Seleção de Temas</div>
-</div>
-
-<!-- HEADER -->
 <header>
   <div class="header-inner">
-    <div class="header-tag">Daily Data · Dr. Eloísio Lopes · Arapiraca</div>
-    <h1>Validação de Temas<br>para Novos Anúncios</h1>
-    <p>Selecione os sinais e situações que mais representam o perfil dos seus pacientes — adultos e crianças.</p>
+    <div class="header-tag">Daily Data · Dr. Carlos França</div>
+    <h1>Roteiros para Anúncios</h1>
+    <p>Selecione os roteiros que deseja gravar e finalize para enviar à equipe</p>
   </div>
 </header>
 
-<!-- ══════════════ DR SCREEN ══════════════ -->
-<div class="screen active" id="screen-dr">
-  <div class="dr-main">
+<main>
+<div id="selecao-screen">
 
-    <!-- GRUPO 1: JOELHO ADULTO — MOVIMENTOS DO DIA A DIA -->
-    <div class="group">
-      <div class="section-eyebrow">Cirurgia de Joelho</div>
-      <div class="section-title">Situações do dia a dia que revelam o problema</div>
-      <div class="section-desc">Movimentos cotidianos em que o paciente sente dor ou dificuldade</div>
-      <div class="items-grid">
-        <div class="item" onclick="toggle(this)" data-group="joelho-rotina" data-label="Dor ao subir ou descer escada">
-          <div class="item-check"></div>
-          <div class="item-label">Dor ao subir ou descer escada</div>
+  <!-- ══ MODELO 1 ══ -->
+  <div class="group">
+    <div class="group-header">
+      <div class="group-icon">🎯</div>
+      <div class="group-title">Modelo 1 — Um sintoma por vídeo</div>
+      <div class="group-count" id="gc-0"></div>
+    </div>
+    <div class="roteiros" data-group="0">
+
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Acordar de madrugada com as mãos dormentes</div>
+          <span class="roteiro-badge">Conversão</span>
         </div>
-        <div class="item" onclick="toggle(this)" data-group="joelho-rotina" data-label="Dificuldade de levantar da cadeira após longo tempo sentado">
-          <div class="item-check"></div>
-          <div class="item-label">Dificuldade de levantar da cadeira após longo tempo sentado</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="joelho-rotina" data-label="Dor ao ajoelhar (limpar o chão, rezar, brincar com filho)">
-          <div class="item-check"></div>
-          <div class="item-label">Dor ao ajoelhar — limpar chão, rezar, brincar com filho</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="joelho-rotina" data-label="Dificuldade de entrar e sair do carro">
-          <div class="item-check"></div>
-          <div class="item-label">Dificuldade de entrar e sair do carro</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="joelho-rotina" data-label="Dor ao agachar para pegar algo no chão">
-          <div class="item-check"></div>
-          <div class="item-label">Dor ao agachar para pegar algo no chão</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="joelho-rotina" data-label="Sensação de joelho que 'cede' ou 'falha' sem aviso">
-          <div class="item-check"></div>
-          <div class="item-label">Sensação de joelho que "cede" ou "falha" sem aviso</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="joelho-rotina" data-label="Dor ao dobrar o joelho (para sentar, agachar)">
-          <div class="item-check"></div>
-          <div class="item-label">Dor ao dobrar o joelho para sentar ou agachar</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="joelho-rotina" data-label="Rigidez pela manhã — joelho que 'precisa esquentar'">
-          <div class="item-check"></div>
-          <div class="item-label">Rigidez pela manhã — joelho que "precisa esquentar"</div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Você acorda de madrugada com as mãos dormentes e precisa sacudir pra voltar a sentir?"</span></div>
+          <div class="campo"><span class="campo-label">Educação</span><span class="campo-texto">Síndrome do Túnel do Carpo — nervo mediano comprimido no punho à noite. O pulso dobrado durante o sono aumenta a compressão.</span></div>
+          <div class="campo"><span class="campo-label">Solução</span><span class="campo-texto">Órtese noturna, medicação ou cirurgia ambulatorial simples quando necessário.</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Se isso acontece com você, agenda uma avaliação comigo em Arapiraca. Link na bio."</span></div>
         </div>
       </div>
-    </div>
 
-    <div class="divider"></div>
-
-    <!-- GRUPO 2: JOELHO ADULTO — SINAIS FÍSICOS -->
-    <div class="group">
-      <div class="section-eyebrow">Cirurgia de Joelho</div>
-      <div class="section-title">Sinais físicos que o paciente vê ou sente</div>
-      <div class="section-desc">Sintomas perceptíveis no próprio joelho, sem movimento</div>
-      <div class="items-grid">
-        <div class="item" onclick="toggle(this)" data-group="joelho-sinais" data-label="Inchaço que aparece no fim do dia ou após esforço">
-          <div class="item-check"></div>
-          <div class="item-label">Inchaço que aparece no fim do dia ou após esforço</div>
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Dedo que trava ao abrir a mão de manhã</div>
+          <span class="roteiro-badge">Conversão</span>
         </div>
-        <div class="item" onclick="toggle(this)" data-group="joelho-sinais" data-label="Calor localizado no joelho">
-          <div class="item-check"></div>
-          <div class="item-label">Calor localizado no joelho</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="joelho-sinais" data-label="Estalos com dor ao movimentar o joelho">
-          <div class="item-check"></div>
-          <div class="item-label">Estalos com dor ao movimentar</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="joelho-sinais" data-label="Sensação de areia ou atrito dentro do joelho">
-          <div class="item-check"></div>
-          <div class="item-label">Sensação de areia ou atrito dentro do joelho</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="joelho-sinais" data-label="Dor que piora ao repouso ou acorda de madrugada">
-          <div class="item-check"></div>
-          <div class="item-label">Dor que piora ao repouso ou acorda de madrugada</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="joelho-sinais" data-label="Joelho visivelmente mais inchado que o outro">
-          <div class="item-check"></div>
-          <div class="item-label">Joelho visivelmente mais inchado que o outro</div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Seu dedo trava quando você tenta abrir a mão de manhã?"</span></div>
+          <div class="campo"><span class="campo-label">Educação</span><span class="campo-texto">Dedo em Gatilho — inflamação no tendão que faz o dedo travar, estalar ou doer. Com o tempo piora.</span></div>
+          <div class="campo"><span class="campo-label">Solução</span><span class="campo-texto">Infiltração no consultório resolve na maioria dos casos. Cirurgia ambulatorial quando necessário.</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Me chama — atendo aqui em Arapiraca. Link na bio."</span></div>
         </div>
       </div>
-    </div>
 
-    <div class="divider"></div>
-
-    <!-- GRUPO 3: JOELHO ADULTO — POR PERFIL -->
-    <div class="group">
-      <div class="section-eyebrow">Cirurgia de Joelho · Segmentação</div>
-      <div class="section-title">Por perfil de paciente — situações de trabalho e rotina</div>
-      <div class="section-desc">Quais perfis você mais atende? Isso orienta a segmentação dos anúncios</div>
-      <div class="items-grid">
-        <div class="item" onclick="toggle(this)" data-group="joelho-perfil" data-label="Quem trabalha sentado: rigidez ao levantar, dor na escada do trabalho">
-          <div class="item-check"></div>
-          <div class="item-label">Quem trabalha sentado — rigidez ao levantar, dor na escada</div>
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Deixar cair objetos sem querer</div>
+          <span class="roteiro-badge urgente">Urgência</span>
         </div>
-        <div class="item" onclick="toggle(this)" data-group="joelho-perfil" data-label="Quem trabalha em pé (comércio, professor, cozinheiro): inchaço no fim do expediente">
-          <div class="item-check"></div>
-          <div class="item-label">Quem trabalha em pé — inchaço e dor no fim do expediente</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="joelho-perfil" data-label="Quem carrega peso: dor aguda ao esforço, joelho que incha rápido">
-          <div class="item-check"></div>
-          <div class="item-label">Quem carrega peso — dor aguda ao esforço</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="joelho-perfil" data-label="Paciente 45+: dor que acorda de madrugada, rigidez matinal, atividades simples comprometidas">
-          <div class="item-check"></div>
-          <div class="item-label">Paciente 45+ — rigidez matinal, atividades simples comprometidas</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="joelho-perfil" data-label="Quem pratica esporte amador e sente dor depois da atividade">
-          <div class="item-check"></div>
-          <div class="item-label">Quem pratica esporte amador e sente dor depois</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="joelho-perfil" data-label="Mulheres que cuidam da casa e sentem dor ao ajoelhar ou agachar">
-          <div class="item-check"></div>
-          <div class="item-label">Mulheres que cuidam da casa — dor ao ajoelhar ou agachar</div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Você está deixando cair objetos sem querer — copo, chave, talher?"</span></div>
+          <div class="campo"><span class="campo-label">Educação</span><span class="campo-texto">Sinal de fraqueza muscular por comprometimento do nervo mediano. Tratamento ainda é muito eficaz — mas não deixar evoluir.</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Agenda uma avaliação comigo em Arapiraca. Link na bio."</span></div>
         </div>
       </div>
-    </div>
 
-    <div class="divider"></div>
-
-    <!-- GRUPO 4: PEDIÁTRICA — O QUE OS PAIS OBSERVAM -->
-    <div class="group">
-      <div class="section-eyebrow">Ortopedia Pediátrica</div>
-      <div class="section-title">O que os pais observam no comportamento dos filhos</div>
-      <div class="section-desc">Sinais percebidos no dia a dia — escola, brincadeira, esporte</div>
-      <div class="items-grid">
-        <div class="item" onclick="toggle(this)" data-group="kids-comportamento" data-label="Filho que para de correr no meio da brincadeira sem motivo aparente">
-          <div class="item-check"></div>
-          <div class="item-label">Filho que para de correr no meio da brincadeira sem motivo</div>
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Formigamento depois de muito tempo no celular</div>
+          <span class="roteiro-badge alcance">Alcance</span>
         </div>
-        <div class="item" onclick="toggle(this)" data-group="kids-comportamento" data-label="Criança que prefere ficar sentada enquanto as outras correm — evitamento">
-          <div class="item-check"></div>
-          <div class="item-label">Criança que prefere ficar sentada enquanto as outras correm</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="kids-comportamento" data-label="Reclamação de 'dor nas pernas' à noite, especialmente após dia ativo">
-          <div class="item-check"></div>
-          <div class="item-label">Dor nas pernas à noite, especialmente após dia ativo</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="kids-comportamento" data-label="Filho que manca discretamente, especialmente quando cansado">
-          <div class="item-check"></div>
-          <div class="item-label">Manca discretamente — especialmente quando cansado</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="kids-comportamento" data-label="Tropeça com frequência ou cai mais que crianças da mesma idade">
-          <div class="item-check"></div>
-          <div class="item-label">Tropeça ou cai mais que crianças da mesma idade</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="kids-comportamento" data-label="'Ele não gosta de educação física' — pode ser evitamento por dor">
-          <div class="item-check"></div>
-          <div class="item-label">"Ele não gosta de educação física" — possível evitamento por dor</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="kids-comportamento" data-label="Dor recorrente após o futebol ou esporte que some e volta">
-          <div class="item-check"></div>
-          <div class="item-label">Dor recorrente após esporte que some e volta</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="kids-comportamento" data-label="Calçado que gasta de forma estranha ou muito assimétrica">
-          <div class="item-check"></div>
-          <div class="item-label">Calçado que gasta de forma estranha ou assimétrica</div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Seu dedo formiga depois de muito tempo no celular ou computador?"</span></div>
+          <div class="campo"><span class="campo-label">Educação</span><span class="campo-texto">Punho dobrado por horas comprime o nervo mediano — gera formigamento, dormência e fraqueza com o tempo.</span></div>
+          <div class="campo"><span class="campo-label">Solução</span><span class="campo-texto">Tratável — quanto antes avalia, mais simples a solução.</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Me chama aqui em Arapiraca. Link na bio."</span></div>
         </div>
       </div>
-    </div>
 
-    <div class="divider"></div>
-
-    <!-- GRUPO 5: PEDIÁTRICA — O QUE OS PAIS VEEM NO CORPO -->
-    <div class="group">
-      <div class="section-eyebrow">Ortopedia Pediátrica</div>
-      <div class="section-title">O que os pais observam no corpo da criança</div>
-      <div class="section-desc">Sinais visuais e posturais percebidos em casa ou em fotos</div>
-      <div class="items-grid">
-        <div class="item" onclick="toggle(this)" data-group="kids-corpo" data-label="Pernas muito em X (joelho valgo) ou em O (joelho varo) para a idade">
-          <div class="item-check"></div>
-          <div class="item-label">Pernas muito em X ou em O para a idade</div>
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Dor ao abrir um pote ou girar uma maçaneta</div>
+          <span class="roteiro-badge">Conversão</span>
         </div>
-        <div class="item" onclick="toggle(this)" data-group="kids-corpo" data-label="Pé que vira muito para dentro ou para fora ao caminhar">
-          <div class="item-check"></div>
-          <div class="item-label">Pé que vira muito para dentro ou para fora ao caminhar</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="kids-corpo" data-label="Andar na ponta dos pés além dos 2–3 anos">
-          <div class="item-check"></div>
-          <div class="item-label">Andar na ponta dos pés além dos 2–3 anos</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="kids-corpo" data-label="Um ombro mais alto que o outro — postura assimétrica (sinal de escoliose)">
-          <div class="item-check"></div>
-          <div class="item-label">Um ombro mais alto que o outro — postura assimétrica</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="kids-corpo" data-label="Tornozelo que 'cai' para dentro ao ficar em pé — pé chato">
-          <div class="item-check"></div>
-          <div class="item-label">Tornozelo que "cai" para dentro ao ficar em pé</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="kids-corpo" data-label="Cintura ou quadril desnivelado — perceptível nas fotos ou ao dobrar o tronco">
-          <div class="item-check"></div>
-          <div class="item-label">Cintura ou quadril desnivelado — visível ao dobrar o tronco</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="kids-corpo" data-label="Criança que não consegue sentar de pernas cruzadas no chão">
-          <div class="item-check"></div>
-          <div class="item-label">Criança que não consegue sentar de pernas cruzadas</div>
-        </div>
-        <div class="item" onclick="toggle(this)" data-group="kids-corpo" data-label="Um joelho visivelmente mais inchado que o outro">
-          <div class="item-check"></div>
-          <div class="item-label">Um joelho visivelmente mais inchado que o outro</div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Você sente dor toda vez que tenta abrir um pote, girar uma maçaneta ou torcer uma roupa?"</span></div>
+          <div class="campo"><span class="campo-label">Educação</span><span class="campo-texto">Pode ser tendinite, rizartrose na base do polegar ou artrose inicial. Diagnóstico correto define o tratamento — cada condição é diferente.</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Agenda uma avaliação comigo em Arapiraca. Link na bio."</span></div>
         </div>
       </div>
+
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Sensação de choque ou fisgada ao dobrar o pulso</div>
+          <span class="roteiro-badge urgente">Urgência</span>
+        </div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Você sente uma fisgada ou sensação de choque quando dobra o pulso de certo jeito?"</span></div>
+          <div class="campo"><span class="campo-label">Educação</span><span class="campo-texto">Pode indicar lesão na fibrocartilagem triangular ou ligamentos do punho. Sem diagnóstico, pode evoluir para instabilidade permanente.</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Agenda uma avaliação comigo. Link na bio."</span></div>
+        </div>
+      </div>
+
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Sentir que perdeu a destreza nas mãos</div>
+          <span class="roteiro-badge emocional">Emocional</span>
+        </div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Você percebeu que perdeu a destreza nas mãos? Antes fazia algo com facilidade e hoje não consegue mais do mesmo jeito?"</span></div>
+          <div class="campo"><span class="campo-label">Educação</span><span class="campo-texto">Não é envelhecimento — é sinal de músculos ou nervos comprometidos. Pode ser Túnel do Carpo avançado, nervo ulnar ou outra condição tratável.</span></div>
+          <div class="campo"><span class="campo-label">Solução</span><span class="campo-texto">Diagnóstico precoce muda o prognóstico.</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Estou aqui pra avaliar e cuidar. Link na bio."</span></div>
+        </div>
+      </div>
+
     </div>
-
-    <div class="divider"></div>
-
-    <!-- OBSERVAÇÕES -->
-    <div class="group">
-      <div class="section-eyebrow">Observações</div>
-      <div class="section-title">Algo mais que você quer incluir nos anúncios?</div>
-      <div class="section-desc">Situações específicas que você vê no consultório e não estão na lista acima</div>
-      <textarea id="obs-text" placeholder="Ex: muitos pacientes chegam após tentativa frustrada de fisioterapia sem diagnóstico correto..." style="width:100%;padding:14px;border:1.5px solid var(--light);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);background:var(--white);resize:vertical;min-height:100px;outline:none;line-height:1.6;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--light)'"></textarea>
-    </div>
-
-  </div><!-- /dr-main -->
-
-  <!-- SUCCESS -->
-  <div class="success-box" id="success-box">
-    <div class="success-icon">✓</div>
-    <h2>Seleção enviada!</h2>
-    <p>O WhatsApp foi aberto com o resumo completo dos temas selecionados.<br><br>Caso não tenha aberto automaticamente, verifique se o pop-up foi bloqueado pelo navegador e tente novamente.</p>
-    <button class="btn-finalizar" style="margin-top:20px;display:inline-flex;" onclick="location.reload()">Refazer seleção</button>
   </div>
 
-  <!-- COUNTER BAR -->
-  <div class="counter-bar" id="counter-bar">
-    <div class="counter-text"><strong id="count-num">0</strong> temas selecionados</div>
-    <button class="btn-finalizar" id="btn-finalizar" onclick="finalizar()" disabled>
-      Finalizar seleção →
-    </button>
+  <div class="divider"></div>
+
+  <!-- SUGESTÕES -->
+  <div class="group">
+    <div class="group-header">
+      <div class="group-icon">💡</div>
+      <div class="group-title">Modelo 1 — Sugestões complementares</div>
+      <div class="group-count" id="gc-1"></div>
+    </div>
+    <div class="roteiros" data-group="1">
+
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Dificuldade para movimentos finos</div>
+          <span class="roteiro-badge sugestao">Sugestão</span>
+        </div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Você está tendo dificuldade pra abotoar roupa, pegar moedas ou fazer movimentos finos com os dedos?"</span></div>
+          <div class="campo"><span class="campo-label">Educação</span><span class="campo-texto">Comprometimento da coordenação fina — nervo mediano ou ulnar. Diagnóstico precoce evita sequelas.</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Agenda uma avaliação comigo em Arapiraca. Link na bio."</span></div>
+        </div>
+      </div>
+
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Dor na base do polegar ao segurar objetos</div>
+          <span class="roteiro-badge sugestao">Sugestão</span>
+        </div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Você sente dor na base do polegar quando segura algo — copo, bolsa, bebê no colo?"</span></div>
+          <div class="campo"><span class="campo-label">Educação</span><span class="campo-texto">Rizartrose — artrose na base do polegar. Muito comum em mulheres acima de 40. Tem tratamento clínico e cirúrgico.</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Me chama — atendo em Arapiraca. Link na bio."</span></div>
+        </div>
+      </div>
+
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Caroço no punho ou na palma sem dor</div>
+          <span class="roteiro-badge sugestao">Sugestão</span>
+        </div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Apareceu um caroço no seu punho ou na palma da mão?"</span></div>
+          <div class="campo"><span class="campo-label">Educação</span><span class="campo-texto">Provavelmente cisto sinovial — benigno, mas precisa de avaliação para confirmar e indicar o tratamento certo.</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Não ignora — agenda uma avaliação. Link na bio."</span></div>
+        </div>
+      </div>
+
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Dor ao carregar sacola de mercado ou balde</div>
+          <span class="roteiro-badge sugestao">Sugestão</span>
+        </div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Você sente dor no punho ou na mão quando carrega sacola de mercado ou balde?"</span></div>
+          <div class="campo"><span class="campo-label">Educação</span><span class="campo-texto">Pode ser tendinite, lesão ligamentar ou artrose inicial. Diagnóstico diferencial define o tratamento.</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Agenda uma avaliação comigo em Arapiraca. Link na bio."</span></div>
+        </div>
+      </div>
+
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Rigidez nas mãos ao acordar</div>
+          <span class="roteiro-badge sugestao">Sugestão</span>
+        </div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Suas mãos ficam rígidas quando você acorda e demoram pra soltar?"</span></div>
+          <div class="campo"><span class="campo-label">Educação</span><span class="campo-texto">Rigidez matinal prolongada pode indicar artrite reumatoide ou condição inflamatória. Avaliação especializada define o diagnóstico.</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Me chama — atendo em Arapiraca. Link na bio."</span></div>
+        </div>
+      </div>
+
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Inchaço no dorso da mão sem motivo aparente</div>
+          <span class="roteiro-badge sugestao">Sugestão</span>
+        </div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Você está notando inchaço no dorso da mão sem ter batido ou machucado?"</span></div>
+          <div class="campo"><span class="campo-label">Educação</span><span class="campo-texto">Pode ser cisto sinovial, tenossinovite ou processo inflamatório. Avaliação especializada descarta causas sistêmicas.</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Agenda uma avaliação comigo em Arapiraca. Link na bio."</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- MODELO 2 -->
+  <div class="group">
+    <div class="group-header">
+      <div class="group-icon">🕐</div>
+      <div class="group-title">Modelo 2 — Por momento do dia</div>
+      <div class="group-count" id="gc-2"></div>
+    </div>
+    <div class="roteiros" data-group="2">
+
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Durante o dia — trabalho e rotina</div>
+          <span class="roteiro-badge alcance">Alcance</span>
+        </div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Você sente algum desses sintomas nas mãos durante o dia?"</span></div>
+          <div class="campo"><span class="campo-label">Lista</span><span class="campo-texto">Dor ao abrir pote · formigamento no celular · dedo que trava de manhã · dor na base do polegar · fisgada no pulso · dificuldade em movimentos finos · caroço na mão. Muitos vão adiando — nem sempre passa e pode piorar.</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Se você se identificou com algum, agenda uma avaliação comigo em Arapiraca. Link na bio."</span></div>
+        </div>
+      </div>
+
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">À noite e ao acordar</div>
+          <span class="roteiro-badge">Conversão</span>
+        </div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Sua mão te acorda de madrugada?"</span></div>
+          <div class="campo"><span class="campo-label">Lista</span><span class="campo-texto">Mão dormente que precisa sacudir · rigidez ao acordar que demora pra soltar · sensação de inchaço pela manhã. Sinais de que nervo ou tendão está sob pressão durante o sono.</span></div>
+          <div class="campo"><span class="campo-label">Solução</span><span class="campo-texto">Tem diagnóstico e tratamento — mais simples do que parece.</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Me chama — atendo em Arapiraca. Link na bio."</span></div>
+        </div>
+      </div>
+
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Sinais que você normaliza — mas não deveria</div>
+          <span class="roteiro-badge emocional">Emocional</span>
+        </div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Tem sintomas na mão que a gente vai normalizando sem perceber."</span></div>
+          <div class="campo"><span class="campo-label">Lista</span><span class="campo-texto">Dificuldade de segurar o celular sem cansar · deixar cair objetos · sentir que perdeu a destreza. Não é frescura. Não é envelhecimento. É sinal de comprometimento.</span></div>
+          <div class="campo"><span class="campo-label">Posição</span><span class="campo-texto">Estou aqui pra avaliar, diagnosticar e cuidar.</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Agenda pelo link na bio ou me chama no WhatsApp."</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- MODELO 3 -->
+  <div class="group">
+    <div class="group-header">
+      <div class="group-icon">🎬</div>
+      <div class="group-title">Modelo 3 — Opções de formato</div>
+      <div class="group-count" id="gc-3"></div>
+    </div>
+    <div class="roteiros" data-group="3">
+
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Opção A — Checklist com 5 sintomas</div>
+          <span class="roteiro-badge alcance">Topo de funil</span>
+        </div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Se você tem algum desses sintomas na mão — presta atenção."</span></div>
+          <div class="campo"><span class="campo-label">Lista</span><span class="campo-texto">Contar nos dedos: mão dormente de madrugada · dedo que trava de manhã · fisgada ao dobrar o pulso · deixar cair objetos · sentir que perdeu a destreza.</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Isso tem nome, tem diagnóstico e tem tratamento. Sou o Dr. Carlos França, Cirurgião da Mão em Arapiraca. Link na bio."</span></div>
+        </div>
+      </div>
+
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Opção B — "Você tem algum desses 3 sinais?"</div>
+          <span class="roteiro-badge">Conversão</span>
+        </div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Gancho</span><span class="campo-texto">"Você tem algum desses três sinais na mão?"</span></div>
+          <div class="campo"><span class="campo-label">Lista</span><span class="campo-texto">3 sintomas com contexto: mão dormente de madrugada (nervo comprimido) · dedo que trava (inflamação no tendão) · deixar cair objetos (perda de força).</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Cada um tem diagnóstico e tratamento. Me chama — atendo em Arapiraca. Link na bio."</span></div>
+        </div>
+      </div>
+
+      <div class="roteiro" onclick="toggle(this)">
+        <div class="roteiro-header">
+          <div class="roteiro-check"></div>
+          <div class="roteiro-titulo">Opção C — Pergunta retórica em sequência</div>
+          <span class="roteiro-badge emocional">Remarketing</span>
+        </div>
+        <div class="roteiro-body">
+          <div class="campo"><span class="campo-label">Perguntas</span><span class="campo-texto">3 perguntas com pausa de 1 segundo entre cada: "Sua mão acorda você de madrugada?" · "Você sente dor toda vez que faz força com o punho?" · "Você está deixando cair objetos sem querer?"</span></div>
+          <div class="campo"><span class="campo-label">Virada</span><span class="campo-texto">"Se respondeu sim pra alguma — sua mão está pedindo atenção. Estou aqui pra cuidar disso."</span></div>
+          <div class="campo"><span class="campo-label">CTA</span><span class="campo-cta">"Agenda sua avaliação pelo link aqui embaixo."</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /selecao-screen -->
+
+<!-- CONFIRM -->
+<div class="confirm-screen" id="confirm-screen">
+  <div class="confirm-icon">✅</div>
+  <div class="confirm-title">Roteiros enviados!</div>
+  <p class="confirm-sub">Sua seleção foi enviada para a Daily Data via WhatsApp.<br>Em breve entraremos em contato para agendar a gravação.</p>
+  <button class="btn btn-navy" onclick="refazer()">Refazer seleção</button>
+</div>
+
+</main>
+
+<!-- STICKY BAR -->
+<div class="sticky-bar" id="stickyBar">
+  <div class="sticky-inner">
+    <div class="count-badge" id="countBadge">0</div>
+    <div class="sticky-label">
+      <strong id="labelText">roteiros selecionados</strong><br>
+      Finalize para enviar à Daily Data
+    </div>
+    <button class="btn btn-outline" onclick="clearAll()">Limpar</button>
+    <button class="btn btn-gold" onclick="finalizar()">Finalizar ✓</button>
   </div>
 </div>
 
-
+<div class="toast" id="toast"></div>
 
 <script>
-// ── CONFIG ───────────────────────────────────────────────
-// Número do WhatsApp da Daily Data que receberá a seleção
-const WHATSAPP_NUMBER = '5582999999999'; // ← substituir pelo número real
+  var GRUPOS = [
+    'Modelo 1 — Um sintoma por vídeo',
+    'Modelo 1 — Sugestões complementares',
+    'Modelo 2 — Por momento do dia',
+    'Modelo 3 — Opções de formato',
+  ];
 
-const GROUP_META = {
-  'joelho-rotina':      { emoji: '🦵', title: 'Joelho — Situações do dia a dia' },
-  'joelho-sinais':      { emoji: '🔍', title: 'Joelho — Sinais físicos' },
-  'joelho-perfil':      { emoji: '👤', title: 'Joelho — Perfis de paciente' },
-  'kids-comportamento': { emoji: '👶', title: 'Pediátrica — Comportamento da criança' },
-  'kids-corpo':         { emoji: '🦶', title: 'Pediátrica — Sinais no corpo' },
-};
+  var selected = new Set();
+  var jaFinalizado = false;
 
-// ── TOGGLE ───────────────────────────────────────────────
-function toggle(el) {
-  el.classList.toggle('selected');
-  updateCounter();
-}
+  function toggle(el) {
+    if (jaFinalizado) return;
+    el.classList.toggle('selected');
+    var titulo = el.querySelector('.roteiro-titulo').textContent;
+    if (el.classList.contains('selected')) {
+      selected.add(titulo);
+    } else {
+      selected.delete(titulo);
+    }
+    updateGroupCounts();
+    updateBar();
+  }
 
-function updateCounter() {
-  const n = document.querySelectorAll('.item.selected').length;
-  document.getElementById('count-num').textContent = n;
-  document.getElementById('btn-finalizar').disabled = n === 0;
-}
+  function updateGroupCounts() {
+    document.querySelectorAll('.roteiros').forEach(function(grid, i) {
+      var n = grid.querySelectorAll('.roteiro.selected').length;
+      var el = document.getElementById('gc-' + i);
+      el.textContent = n > 0 ? (n === 1 ? '1 selecionado' : n + ' selecionados') : '';
+      el.className = 'group-count' + (n > 0 ? ' has' : '');
+    });
+  }
 
-// ── FINALIZAR → WHATSAPP ─────────────────────────────────
-function finalizar() {
-  const groups = {};
-  document.querySelectorAll('.item.selected').forEach(el => {
-    const g = el.dataset.group;
-    const l = el.dataset.label;
-    if (!groups[g]) groups[g] = [];
-    groups[g].push(l);
-  });
+  function updateBar() {
+    var bar = document.getElementById('stickyBar');
+    var badge = document.getElementById('countBadge');
+    var n = selected.size;
+    if (n === 0 || jaFinalizado) { bar.classList.remove('show'); return; }
+    bar.classList.add('show');
+    badge.textContent = n;
+    document.getElementById('labelText').textContent = n === 1 ? '1 roteiro selecionado' : n + ' roteiros selecionados';
+    badge.classList.add('bump');
+    setTimeout(function() { badge.classList.remove('bump'); }, 200);
+  }
 
-  const obs = document.getElementById('obs-text').value.trim();
-  const d = new Date();
-  const fmt = d.toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+  function clearAll() {
+    document.querySelectorAll('.roteiro.selected').forEach(function(el) { el.classList.remove('selected'); });
+    selected.clear();
+    updateGroupCounts();
+    updateBar();
+  }
 
-  // Montar mensagem
-  let msg = `*BRIEFING DE ANÚNCIOS — Dr. Eloísio Lopes*\n`;
-  msg += `Finalizado em: ${fmt}\n\n`;
+  function finalizar() {
+    if (selected.size === 0) { showToast('Selecione ao menos um roteiro'); return; }
 
-  let total = 0;
-  Object.entries(groups).forEach(([gKey, items]) => {
-    if (!items.length) return;
-    const meta = GROUP_META[gKey] || { emoji: '•', title: gKey };
-    msg += `*${meta.emoji} ${meta.title}*\n`;
-    items.forEach(i => { msg += `• ${i}\n`; total++; });
-    msg += '\n';
-  });
+    var linhas = [];
+    linhas.push('*Roteiros Selecionados — Dr. Carlos França*');
+    linhas.push('');
 
-  if (obs) msg += `*📝 Observações*\n${obs}\n\n`;
-  msg += `_Total: ${total} temas selecionados_`;
+    document.querySelectorAll('.roteiros').forEach(function(grid, i) {
+      var items = [];
+      grid.querySelectorAll('.roteiro.selected').forEach(function(el) {
+        items.push(el.querySelector('.roteiro-titulo').textContent);
+      });
+      if (items.length > 0) {
+        linhas.push('*' + GRUPOS[i] + '*');
+        items.forEach(function(item, j) { linhas.push((j + 1) + '. ' + item); });
+        linhas.push('');
+      }
+    });
 
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-  window.open(url, '_blank');
+    linhas.push('*Total: ' + selected.size + ' roteiro' + (selected.size > 1 ? 's' : '') + ' selecionado' + (selected.size > 1 ? 's' : '') + '*');
+    linhas.push('_Enviado em ' + new Date().toLocaleString('pt-BR') + '_');
 
-  // Mostra tela de sucesso
-  document.getElementById('counter-bar').style.display = 'none';
-  document.querySelector('.dr-main').style.display = 'none';
-  document.getElementById('success-box').classList.add('visible');
-}
+    var texto = encodeURIComponent(linhas.join('\n'));
+    var url = 'https://wa.me/5582993920974?text=' + texto;
 
-// init
-updateCounter();
+    jaFinalizado = true;
+    document.getElementById('selecao-screen').style.display = 'none';
+    document.getElementById('confirm-screen').classList.add('show');
+    document.getElementById('stickyBar').classList.remove('show');
+    window.open(url, '_blank');
+  }
+
+  function refazer() {
+    jaFinalizado = false;
+    clearAll();
+    document.getElementById('selecao-screen').style.display = 'block';
+    document.getElementById('confirm-screen').classList.remove('show');
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2500);
+  }
 </script>
 </body>
 </html>
